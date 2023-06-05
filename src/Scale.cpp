@@ -23,10 +23,8 @@ unsigned long t = 0;
 void ScaleInit()
 {
 	LoadCell.begin();
-	LoadCell.setGain(64);
-	// LoadCell.setReverseOutput();
+	// LoadCell.setGain(64);
 	float calibrationValue;	  // calibration value (see example file "Calibration.ino")
-	calibrationValue = 696.0; // uncomment this if you want to set the calibration value in the sketch
 
 	EEPROM.get(calVal_eepromAdress, calibrationValue); // uncomment this if you want to fetch the calibration value from eeprom
 

@@ -27,15 +27,15 @@ void ServerInit()
 	while (!Serial) {;}
 
 	// WiFi.mode(WIFI_STA);
-	WiFi.begin("Hakdog 2.4", "SiopaoSiomai1234_");
-	// WiFi.softAP(config.wifiName, config.wifiPassword);
+	// WiFi.begin("Hakdog 2.4", "SiopaoSiomai1234_");
+	WiFi.softAP(config.wifiName, config.wifiPassword);
 	
-	while (WiFi.status() != WL_CONNECTED)
-	{
-		Serial.print("Attempting to connect to SSID: ");
-		Serial.println(ssid);
-		delay(1000);
-	}
+	// while (WiFi.status() != WL_CONNECTED)
+	// {
+	// 	Serial.print("Attempting to connect to SSID: ");
+	// 	Serial.println(ssid);
+	// 	delay(1000);
+	// }
 
 	server.on("/", HTTP_GET, OnIndex);
 	server.on("/getconfig", HTTP_GET, OnGetConfig);
@@ -56,17 +56,17 @@ void OnIndex()
 void OnGetConfig()
 {
 	String json = String("{") + 
-		"\"warning_level\": " + String(conf.warningLevel) + ","+\
-		"\"tank_type\": \"" + String(conf.tankType) + "\"," +\
-		"\"recipients\": [\"" + String(conf.recipientOne) + "\",\"" + String(conf.recipientTwo) + "\",\"" + String(conf.recipientThree) + "\"]," +\
-		"\"notify_ext\": " + String(conf.notifyExternalRecipient) + "," +\
-		"\"ext_recipient_number\": " + String(conf.externalRecipientNumber) + "," +\
-		"\"ext_recipient_message\": \"" + String(conf.externalRecipientMessage) + "\"," +\
-		"\"wifi_name\": \"" + String(conf.wifiName) + "\"," +\
-		"\"wifi_password\": \"" + String(conf.wifiPassword) + "\"," +\
-		"\"use_custom_weight\": " + String(conf.useCustomWeight) + "," +\
-		"\"custom_gas_weight\": " + String(conf.customWeight) + "," +\
-		"\"custom_tare_weight\": " + String(conf.customTare) + "}";
+	"\"warning_level\": " + String(conf.warningLevel) + ","+\
+	"\"tank_type\": \"" + String(conf.tankType) + "\"," +\
+	"\"recipients\": [\"" + String(conf.recipientOne) + "\",\"" + String(conf.recipientTwo) + "\",\"" + String(conf.recipientThree) + "\"]," +\
+	"\"notify_ext\": " + String(conf.notifyExternalRecipient) + "," +\
+	"\"ext_recipient_number\": " + String(conf.externalRecipientNumber) + "," +\
+	"\"ext_recipient_message\": \"" + String(conf.externalRecipientMessage) + "\"," +\
+	"\"wifi_name\": \"" + String(conf.wifiName) + "\"," +\
+	"\"wifi_password\": \"" + String(conf.wifiPassword) + "\"," +\
+	"\"use_custom_weight\": " + String(conf.useCustomWeight) + "," +\
+	"\"custom_gas_weight\": " + String(conf.customWeight) + "," +\
+	"\"custom_tare_weight\": " + String(conf.customTare) + "}";
 
 	server.send(200, "application/json",  json);
 }
@@ -95,25 +95,25 @@ void OnPostConfig()
 	int recipientOneEndIndex = recipientsString.indexOf("\"", recipientOneIndex + 1);
 	String recipientOneString = recipientsString.substring(recipientOneIndex + 2, recipientOneEndIndex);
 	if (recipientOneString.length() > 1)
-		recipientOneString.toCharArray(conf.recipientOne, 20);
+	recipientOneString.toCharArray(conf.recipientOne, 20);
 	else
-		conf.recipientOne[0] = '\0';
+	conf.recipientOne[0] = '\0';
 
 	int recipientTwoIndex = recipientsString.indexOf("\"", recipientOneEndIndex + 1);
 	int recipientTwoEndIndex = recipientsString.indexOf("\"", recipientTwoIndex + 1);
 	String recipientTwoString = recipientsString.substring(recipientTwoIndex + 2, recipientTwoEndIndex);
 	if (recipientTwoString.length() > 1)
-		recipientTwoString.toCharArray(conf.recipientTwo, 20);
+	recipientTwoString.toCharArray(conf.recipientTwo, 20);
 	else
-		conf.recipientTwo[0] = '\0';
+	conf.recipientTwo[0] = '\0';
 
 	int recipientThreeIndex = recipientsString.indexOf("\"", recipientTwoEndIndex + 1);
 	int recipientThreeEndIndex = recipientsString.indexOf("\"", recipientThreeIndex + 1);
 	String recipientThreeString = recipientsString.substring(recipientThreeIndex + 2, recipientThreeEndIndex);
 	if (recipientThreeString.length() > 1)
-		recipientThreeString.toCharArray(conf.recipientThree, 20);
+	recipientThreeString.toCharArray(conf.recipientThree, 20);
 	else
-		conf.recipientThree[0] = '\0';
+	conf.recipientThree[0] = '\0';
 
 	// Get notify external recipient from json
 	int notifyExternalRecipientIndex = json.indexOf("\"notify_ext\":");
@@ -126,9 +126,9 @@ void OnPostConfig()
 	int externalRecipientNumberEndIndex = json.indexOf(",", externalRecipientNumberIndex);
 	String externalRecipientNumberString = json.substring(externalRecipientNumberIndex + 25, externalRecipientNumberEndIndex - 1);
 	if (externalRecipientNumberString.length() > 1)
-		externalRecipientNumberString.toCharArray(conf.externalRecipientNumber, 20);
+	externalRecipientNumberString.toCharArray(conf.externalRecipientNumber, 20);
 	else
-		conf.externalRecipientNumber[0] = '\0';
+	conf.externalRecipientNumber[0] = '\0';
 	
 	// Get external recipient message from json
 	int externalRecipientMessageIndex = json.indexOf("\"ext_recipient_message\":");
@@ -146,10 +146,10 @@ void OnPostConfig()
 	String wifiPasswordString = json.substring(wifiPasswordIndex + 17, wifiPasswordEndIndex - 1);
 	if (wifiNameString.c_str() != conf.wifiName || wifiPasswordString.c_str() != conf.wifiPassword)
 	{
-		wifiNameString.toCharArray(conf.wifiName, 20);
-		wifiPasswordString.toCharArray(conf.wifiPassword, 20);
-		
-		WiFi.softAP(conf.wifiName, conf.wifiPassword);
+	wifiNameString.toCharArray(conf.wifiName, 20);
+	wifiPasswordString.toCharArray(conf.wifiPassword, 20);
+	
+	WiFi.softAP(conf.wifiName, conf.wifiPassword);
 	}
 	
 	// Get use custom weight from json
@@ -179,13 +179,13 @@ void OnGetStat()
 {
 	String json =\
 	String("{") +\
-		"\"raw\": " + String(status.raw) + "," +\
-		"\"level\": " + String(status.level) + "," +\
-		"\"weight\": " + String(status.weight) + "," +\
-		"\"tare_weight\": " + String(status.tareWeight) + "," +\
-		"\"gas_weight\": " + String(status.gasWeight) + "," +\
-		"\"avg_use\": " + String(status.avgUse) + "," +\
-		"\"days_before_empty\": " + String(status.daysBeforeEmpty) +\
+	"\"raw\": " + String(status.raw) + "," +\
+	"\"level\": " + String(status.level) + "," +\
+	"\"weight\": " + String(status.weight) + "," +\
+	"\"tare_weight\": " + String(status.tareWeight) + "," +\
+	"\"gas_weight\": " + String(status.gasWeight) + "," +\
+	"\"avg_use\": " + String(status.avgUse) + "," +\
+	"\"days_before_empty\": " + String(status.daysBeforeEmpty) +\
 	"}";
 
 	server.send(200, "application/json", json);	

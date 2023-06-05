@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <deque>
 #include "include/WebServer.h"
 #include "include/Config.h"
 #include "include/Scale.h"
@@ -7,10 +8,7 @@
 #define ONEDAY 86400000UL
 
 unsigned long startTime = 0;
-float readings[30] = {0};
-
-void saveConfigToEEPROM();
-void readConfigInEEPROM();
+std::deque<float> readings;
 
 void setup()
 {
@@ -34,16 +32,10 @@ void setup()
 	// Read the last 30 readings from EEPROM from address 400
 	for (int i = 0; i < 30; i++)
 	{
-		EEPROM.get(400 + (i * sizeof(float)), readings[i]);
-	}
-
-	// Print the last 30 readings
-	for (int i = 0; i < 30; i++)
-	{
-		Serial.print("Reading ");
-		Serial.print(i);
-		Serial.print(" = ");
-		Serial.println(readings[i]);
+		int reading = 0.0;
+		EEPROM.get(400 + (5 * i), reading);
+		readings.push_back(reading);
+		Serial.println(reading);
 	}
 }
 
@@ -54,10 +46,9 @@ void loop()
 	Config &config = GetConfig();
 
 	prevWeight = currWeight;
-	currWeight = ScaleRead();
+	currWeight = round(ScaleRead() * 100.0) / 100.0;
 
 	float currLevel = ToGasLevel(currWeight);
-	Serial.println(currWeight);
 	
 	Status status 
 	{
@@ -72,7 +63,9 @@ void loop()
 
 	if (HasTank(currWeight))
 	{
-		if (!config.warningSent && currLevel <= config.warningLevel && currWeight > 0.1 and currWeight < prevWeight)
+		if (!config.warningSent && 
+			currLevel <= config.warningLevel && 
+			currWeight > 0.1 and currWeight < prevWeight)
 		{
 			config.warningSent = true;
 			SendSMS(config.recipientOne, currLevel);
@@ -104,16 +97,31 @@ void loop()
 		config.criticalSent = false;
 	}
 
-	if (millis() - startTime > 1000)
+	if (millis() - startTime > 20000)
 	{
-		// Save readings to EEPROM starting from address 400
+		if (readings.size() > 30)
+		{
+			readings.pop_front();
+			readings.push_back(currLevel);
+		}
+		else
+		{
+			readings.push_back(currLevel);
+		}
+		
+
+		// Write the last 30 readings to EEPROM from address 400
 		for (int i = 0; i < 30; i++)
 		{
-			EEPROM.put(400 + i * sizeof(float), currLevel);
+			EEPROM.put(400 + (i * 5), currLevel);
 		}
-
+		// Serial.println(currLevel);
+		
+		Serial.println(currWeight);
+		// Truncate currLevel to 1 decimal place
+		// currLevel = ;
+		// Serial.println(currLevel);
 		startTime = millis();
-		Serial.println("Saved readings to EEPROM");
 	}
 
 	CheckConnections(status);
