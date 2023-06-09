@@ -34,21 +34,23 @@ void UpdateSerial()
 	}
 }
 
-void SendSMS(char *recipient, float level)
+void SendSMS(char *recipient, float level, float weight, float gasWeight)
 {
 	UpdateSerial();
 	sim.println("AT+CMGF=1");
 	delay(1000);
 	sim.printf("AT+CMGS=\"+63%s\"\r", recipient);
 	delay(1000);
+	
 	if (level > 5.0)
 	{
-		sim.printf("WARNING! Your tank has reached %.2f percent.", level);
+		sim.printf("WARNING! Your tank has reached %.2f%%.\n\n %.2fkg / %.2fkg remaining.", level, weight, gasWeight);
 	}
 	else
 	{
-		sim.printf("CRITICAL! You're almost out of gas. %.2f percent remaining.", level);
+		sim.printf("CRITICAL! Your tank has reached %.2f%%.\n\n %.2fkg / %.2fkg remaining.", level, weight, gasWeight);
 	}
+
 	delay(1000);
 	sim.println((char)26);
 	delay(1000);

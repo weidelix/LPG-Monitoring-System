@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <deque>
+#include <SPIFFS.h>
 #include "include/WebServer.h"
 #include "include/Config.h"
 #include "include/Scale.h"
@@ -13,7 +14,7 @@ std::deque<float> readings;
 void setup()
 {
 #if defined(ESP8266) || defined(ESP32)
-	EEPROM.begin(1024);
+	EEPROM.begin(512);
 #endif
 
 	Serial.begin(57600);
@@ -29,13 +30,39 @@ void setup()
 	ResetTare();
 	startTime = millis();
 
-	// Read the last 30 readings from EEPROM from address 400
-	for (int i = 0; i < 30; i++)
+	if (!SPIFFS.begin())
 	{
-		int reading = 0.0;
-		EEPROM.get(400 + (5 * i), reading);
-		readings.push_back(reading);
-		Serial.println(reading);
+		Serial.println("An error has occured while mounting the File System.");
+		return;
+	}
+
+	// Read readings from SPIFFS
+	File file = SPIFFS.open("/readings.csv", FILE_READ);
+	if (!file)
+	{
+		Serial.println("Failed to open file for reading");
+		return;
+	}
+
+	String line = file.readStringUntil('\n');
+	file.close();
+	
+	int start = 0;
+	int end = 0;
+	while (end != -1)
+	{
+		end = line.indexOf(',', start);
+		if (end != -1)
+		{
+			String reading = line.substring(start, end);
+			readings.push_back(reading.toFloat());
+			start = end + 1;
+		}
+		else
+		{
+			String reading = line.substring(start);
+			readings.push_back(reading.toFloat());
+		}
 	}
 }
 
@@ -61,6 +88,8 @@ void loop()
 		0
 	};
 
+	CheckConnections(status);
+
 	if (HasTank(currWeight))
 	{
 		if (!config.warningSent && 
@@ -68,11 +97,12 @@ void loop()
 			currWeight > 0.1 and currWeight < prevWeight)
 		{
 			config.warningSent = true;
-			SendSMS(config.recipientOne, currLevel);
+			float gasWeight = config.GetWeight();
+			SendSMS(config.recipientOne, currLevel, currWeight, gasWeight);
 			delay(1000);
-			SendSMS(config.recipientTwo, currLevel);
+			SendSMS(config.recipientTwo, currLevel, currWeight, gasWeight);
 			delay(1000);
-			SendSMS(config.recipientThree, currLevel);
+			SendSMS(config.recipientThree, currLevel, currWeight, gasWeight);
 			delay(1000);
 
 			if (config.notifyExternalRecipient)
@@ -84,11 +114,12 @@ void loop()
 		if (!config.criticalSent && currLevel < 6.0 && currWeight > 0.1 and currWeight < prevWeight)
 		{
 			config.criticalSent = true;
-			SendSMS(config.recipientOne, currLevel);
+			float gasWeight = config.GetWeight();
+			SendSMS(config.recipientOne, currLevel, currWeight, gasWeight);
 			delay(1000);
-			SendSMS(config.recipientTwo, currLevel);
+			SendSMS(config.recipientTwo, currLevel, currWeight, gasWeight);
 			delay(1000);
-			SendSMS(config.recipientThree, currLevel);
+			SendSMS(config.recipientThree, currLevel, currWeight, gasWeight);
 		}
 	}
 	else
@@ -97,7 +128,7 @@ void loop()
 		config.criticalSent = false;
 	}
 
-	if (millis() - startTime > 20000)
+	if (millis() - startTime > ONEDAY)
 	{
 		if (readings.size() > 30)
 		{
@@ -109,20 +140,22 @@ void loop()
 			readings.push_back(currLevel);
 		}
 		
-
-		// Write the last 30 readings to EEPROM from address 400
-		for (int i = 0; i < 30; i++)
+		// Save readings in SPIFFS in csv format
+		File file = SPIFFS.open("/readings.csv", FILE_WRITE);
+		if (!file)
 		{
-			EEPROM.put(400 + (i * 5), currLevel);
+			Serial.println("Failed to open file for writing");
+			return;
 		}
-		// Serial.println(currLevel);
-		
-		Serial.println(currWeight);
-		// Truncate currLevel to 1 decimal place
-		// currLevel = ;
-		// Serial.println(currLevel);
+
+		for (int i = 0; i < readings.size(); i++)
+		{
+			file.print(readings[i]);
+			file.print(",");
+		}
+
+		file.close();
+
 		startTime = millis();
 	}
-
-	CheckConnections(status);
 }

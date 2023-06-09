@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>About</title>
+</head>
+<style>
+	body {
+		background-color: white;
+		font-family: 'Arial';
+		margin: 0px 0px;
+	}
+
+	table,
+	td {
+		border: 1px solid black;
+		border-collapse: collapse;
+	}
+</style>
+
+<body
+	style="display: flex; flex-wrap: wrap; flex-direction: column; align-items: stretch; padding: 5%; max-width: 800px;">
+	<div style="display: flex; justify-content: space-between; align-items: center;">
+		<h1>Help</h1>
+		<a href="/">Home</a>
+	</div>
+
+	The following instructions are for assisting and guiding users on the proper using the LPG Monitoring Device.
+
+	<br>
+	<br>
+	<h3>Safety Instructions</h3>
+	<ol>
+
+		<li>Choose a well-ventilated area for the device and tank placement. It should be away from any source of
+			ignition and can be sheltered from the rain to avoid damages to the device.</li>
+		<li>Turn off the device before charging the system because charging the system while using it can potentially
+			result in slower performance, increased heat generation, reduced battery life, and risks associated with an
+			unstable power supply.</li>
+		<li>Do not wash the device directly with water instead, clean the chassis with a dry cloth.</li>
+		<li>Please use at least 12 watts adapter to charge the device and remove it after 1hr - 2hrs of charging the
+			battery.</li>
+		<li>Always double check the wires and circuits of the device before turning it on.</li>
+		<li>Put the power cord in the right place in order to avoid any stumble.</li>
+		<li>Changes made to the system by unauthorized individuals or other technical modifications are strictly
+			prohibited.</li>
+	</ol>
+
+	<h3>Parts of the device</h3>
+	<img src="parts">
+	<ul>
+		<li>Base Chasis</li>
+		<li>3D Printed Chasis for the Electronics</li>
+		<li>Surface Platform for the Sytem</li>
+		<li>Micro-USB Charger </li>
+	</ul>
+
+	<h3>Installation</h3>
+	<ol>
+		<li>Pull out the 3D printed chassis inside the system. Open the 3D printed Chassis. Before anything else, make
+			sure that all hardware components are connected in the PCB. Once done.</li>
+		<li>Insert your sim card into the GSM module which is also located into the chassis.</li>
+		<li>Put the 18650 Rechargeable Lithium Batteries on the Battery Shield V8. Be aware of the positive and negative
+			sides of the battery.</li>
+		<li>Turn on the device by pressing the power button inside.</li>
+		<li>Wait for the device to boot-up.</li>
+		<li>After making sure that the components are turned on. Close the 3D printed chassis and push it inside the
+			system. </li>
+		<li>Place the system under or close to the cooking area, wherein LPG cylinders are present.</li>
+	</ol>
+
+	<h3>User Interface</h3>
+	<ol>
+		<li>Set the notification warning level. When the LPG reaches the defined level, it will send you a notication.
+		</li>
+		<img src="ui_1">
+		<li>Select the tank type or customize the tare weight and the weight if needed.</li>
+		<img src="ui_2">
+		<li>Add recipients for the SMS Notification then save.</li>
+		<img src="ui_3">
+	</ol>
+	<h3>Maintenance</h3>
+	<ol>
+		<li>Turn off the device inside the 3D Printed chassis.</li>
+		<li>You must use dry cloth to wipe the dust from the platform</li>
+		<li>Use small and soft brushes to clean the dust inside the device.</li>
+	</ol>
+	<div>For the hardware maintenance;</div>
+	<ol>
+		<li>Pull the front of the system where the chassis is facing and check the wiring inside, and test all the
+			sensors.</li>
+		<li>To test the sensors, open the device during the testing and test the system by putting an object that has
+			known weight and putting it on the surface platform of the system. Visit 192.168.4.1 to see if it represents
+			the correct value.</li>
+	</ol>
+	<div>For the software maintenance;</div>
+	<ol>
+		<li>Strictly, do not change any that are present in the source code.</li>
+		<li>Call the service provider.</li>
+	</ol>
+	<div>NOTE: ALWAYS ASK OR CALL THE SERVICE PROVIDER FOR ANY CONCERN ABOUT THE DEVICE.
+		CAUTION: ALWAYS REMOVE THE BATTERY OF THE DEVICE BEFORE DOING MAINTENANCE.
+	</div>
+
+	<br>
+	<h3>Specifications</h3>
+	<table>
+		<tr>
+			<td>Product Name</td>
+			<td>LPG Monitoring System</td>
+		</tr>
+		<tr>
+			<td>Charger</td>
+			<td>5V, 2.5 Amp Micro-USB, power adapter, 12 watts</td>
+		</tr>
+		<tr>
+			<td>ESP32 WROOM 32D</td>
+			<td>
+				<li>RF Family/Standard: Bluetooth, WiFi</li>
+				<li>Protocol : 802.11b/g/n, Bluetooth v4.2 +EDR, Class 1, 2 and 3</li>
+				<li>Modulation: CCK, DSSS, OFDM</li>
+				<li>Frequency:2.4GHz ~ 2.5GHz</li>
+				<li>Data Rate: 150Mbps</li>
+				<li>Power - Output: 20.5dBm</li>
+				<li>Sensitivity: -98dBm</li>
+				<li>Serial Interfaces:GPIO, I²C, I²S, PWM, SDIO, SPI, UART</li>
+				<li>Antenna Type:Integrated, Trace</li>
+				<li>Utilized IC / Part: ESP32-D0WD</li>
+				<li>Memory Size:448kB ROM, 536kB SRAM</li>
+				<li>Voltage - Supply:2.7V ~ 3.6V</li>
+				<li>Current - Receiving : -</li>
+				<li>Current - Transmitting: -</li>
+				<li>Mounting Type: Surface Mount</li>
+				<li>Operating Temperature: -40°C ~ 85°C</li>
+				<li>Package / Case: 38-SMD Module</li>
+				<li>Base Product Number: ESP32</li>
+			</td>
+		</tr>
+		<tr>
+			<td>HX711 Amplifier</td>
+			<td>
+				<li>Two selectable differential input channels
+				</li>
+				<li>On-chip active low noise PGA with selectable gain of 32, 64 and 128
+				</li>
+				<li>On-chip power supply regulator for load-cell andADC analog power supply
+				</li>
+				<li>On-chip oscillator requiring no external component with optional external crystal
+				</li>
+				<li>On-chip power-on-reset
+				</li>
+				<li>Simple digital control and serial interface:pin-driven controls, no programming needed
+				</li>
+				<li>Selectable 10SPS or 80SPS output data rate
+				</li>
+				<li>Simultaneous 50 and 60Hz supply rejection
+				</li>
+				<li>Current consumption including on-chip analog power supply regulator: normal operation less than
+					1.5mA, power
+					down less than 1uA </li>
+				<li>Operation supply voltage range: 2.6 ~ 5.5V
+				</li>
+				<li>Operation temperature range:-40 ~ +85 °C
+				</li>
+				<li>16 pin SOP-16 package</li>
+			</td>
+		</tr>
+		<tr>
+			<td>SIM800L V2</td>
+			<td>Supports Quad-band 850/900/1800/1900 MHz, which can transmit voice calls, SMS messages and low power
+				data.
+				<li>GPRS multi-slot class 12/10
+				</li>
+				<li>GPRS mobile station Class B
+				</li>
+				<li>Compatible with GSM 2/2 +
+				</li>
+				<li>Class 1 (1 W 1800 / 1900MHz)
+				</li>
+				<li>Class 4 (2 W @ 850 / 900MHz)
+				</li>
+				<li>Bluetooth 3.0 + EDR compatibility
+				</li>
+				<li>FM: International band 76 ~ 109MHz, 50KHz correction level.
+				</li>
+				<li>Control over AT instruction set
+				</li>
+				<li>Voltage: 4.1 ~ 5VDC
+				</li>
+				<li>Operating Temperature: -40 ~ 85</li>
+			</td>
+		</tr>
+	</table>
+</body>
+
+</html>
