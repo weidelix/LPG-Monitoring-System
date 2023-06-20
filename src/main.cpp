@@ -88,8 +88,6 @@ void loop()
 		0
 	};
 
-	CheckConnections(status);
-
 	if (HasTank(currWeight))
 	{
 		if (!config.warningSent && 
@@ -158,4 +156,6 @@ void loop()
 
 		startTime = millis();
 	}
+
+	CheckConnections(status);
 }
